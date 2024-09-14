@@ -1,0 +1,2 @@
+GET http://localhost:8080/registrations
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im00QGEuY29tIiwiZXhwIjoxNzI2MzQ3NTE3LCJ1c2VySWQiOjF9.kBuaZnJaMOnatmopx7hptjIObMcsD_KamWQR85zRqJg
