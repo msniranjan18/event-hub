@@ -55,24 +55,24 @@ func main() {
 		c.File("./front-end/user-signup.html")
 	})
 
-	// Serve the login page at the /login URL
 	ginServer.GET("/login", func(c *gin.Context) {
 		c.File("./front-end/user-login.html")
 	})
 
-	// Serve the login page at the /login URL
 	ginServer.GET("/event-list", func(c *gin.Context) {
 		c.File("./front-end/events.html")
 	})
 
-	// Serve the login page at the /login URL
 	ginServer.GET("/registered-event-list", func(c *gin.Context) {
 		c.File("./front-end/user-registered-events.html")
 	})
 
-	// Serve the login page at the /login URL
 	ginServer.GET("/user-dashboard", func(c *gin.Context) {
 		c.File("./front-end/user-dashboard.html")
+	})
+
+	ginServer.GET("/event-create", func(c *gin.Context) {
+		c.File("./front-end/event-create.html")
 	})
 
 	server.RegisterRoute(ginServer)
