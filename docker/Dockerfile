@@ -1,0 +1,35 @@
+# Build stage
+FROM golang:1.22-bullseye AS builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y build-essential
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy the Go Modules manifests
+COPY go.mod go.sum ./
+
+# Download all dependencies
+RUN go mod download
+
+# Copy the source code into the container
+COPY . .
+
+# Build the Go app
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o event-hub-backend main.go
+
+# Final stage
+FROM debian:bullseye-slim
+
+# Set the Current Working Directory inside the container
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/event-hub-backend .
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./event-hub-backend"]
