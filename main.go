@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"msn.com/event-hub/pkg/db"
 	"msn.com/event-hub/pkg/server"
@@ -35,6 +36,15 @@ func main() {
 	// gin engine setup
 	ginServer := gin.Default()
 	//ginServer.LoadHTMLGlob()
+
+	// CORS configuration
+	ginServer.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Allows all origins
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	// Middleware to add logger to the context
 	ginServer.Use(func(c *gin.Context) {
