@@ -20,7 +20,15 @@ build:
 # Build Docker image
 docker-build:
 	@echo "Building Docker image..."
-	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile .
+	docker build -t \
+	--build-arg GOOS=linux \
+	--build-arg GOARCH=amd64 \
+	--build-arg CGO_ENABLED=1 \
+	--build-arg APP_ENV=staging \
+	--build-arg PORT=8080 \
+	--build-arg APP_NAME=event-hub-backend \
+	--build-arg BUILD_VERSION=1.0.0 \
+	$(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile .
 
 # Run Docker container
 docker-run:
