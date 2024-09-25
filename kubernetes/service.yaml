@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-hub-backend-service
+  namespace: event-hub
+  labels:
+    app: event-hub-backend
+spec:
+  selector:
+    app: event-hub-backend
+  ports:
+    - protocol: TCP
+      port: 80               # External port exposed by the service
+      targetPort: 8080       # The internal port your container is listening on
+      nodePort: 30000        # Optional: specify a node port (if not specified, one will be chosen)
+  type: NodePort           # Change from LoadBalancer to NodePort
+#   ports:
+#     - protocol: TCP
+#       port: 80               # External port exposed by the service
+#       targetPort: 8080        # The internal port your container is listening on
+#   type: LoadBalancer          # You can also use "ClusterIP" or "NodePort"

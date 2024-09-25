@@ -13,8 +13,21 @@ import (
 	"msn.com/event-hub/pkg/server"
 )
 
+var (
+	buildVersion string
+	appEnv       string
+)
+
 func main() {
 	fmt.Println("Start...")
+	if appEnv == "" {
+		appEnv = os.Getenv("APP_ENV")
+	}
+	if buildVersion == "" {
+		buildVersion = os.Getenv("BUILD_VERSION")
+	}
+
+	fmt.Printf("App Environment: %s, Build Version: %s\n", appEnv, buildVersion)
 	// logging setup
 	timeStampStr := fmt.Sprintf("%d", time.Now().Unix())
 	logFilePath := "/tmp/event-hub_" + timeStampStr + ".log"
@@ -28,7 +41,7 @@ func main() {
 	multiWriter := io.MultiWriter(os.Stdout, logFile)
 
 	logger := log.New(multiWriter, "", log.Ldate|log.Ltime|log.Lshortfile)
-	logger.Print("starting event-hub...")
+	logger.Printf("starting event-hub... Environment: %s, Version: %s\n", appEnv, buildVersion)
 
 	// database setup
 	db.InitDB()

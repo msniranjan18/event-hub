@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-hub-backend
+  namespace: event-hub
+  labels:
+    app: event-hub-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: event-hub-backend
+  template:
+    metadata:
+      labels:
+        app: event-hub-backend
+    spec:
+      containers:
+        - name: event-hub-backend
+          image: "docker.io/manvendraniranjan528/event-hub-backend:latest"
+          ports:
+            - containerPort: 8080      

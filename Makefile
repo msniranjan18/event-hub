@@ -1,7 +1,7 @@
 # Define variables
 APP_NAME := event-hub-backend
 DOCKER_IMAGE := event-hub-backend
-DOCKER_TAG := latest
+DOCKER_TAG := 1.0.0
 BUILD_DIR := ${PWD}/build
 CONTAINER_NAME := event-hub-backend
 # Default target
@@ -13,7 +13,6 @@ build:
 	@echo "Building the Go application..." 
 	mkdir -p $(BUILD_DIR)
 	# GOOS=linux GOARCH=amd64 go build -a -o $(BUILD_DIR)/$(APP_NAME) main.go
-	go mod download
 	go mod tidy
 	go build -o $(BUILD_DIR)/$(APP_NAME) main.go
 
@@ -40,7 +39,8 @@ docker-run:
 		docker rm $$CONTAINER_ID || true; \
 	fi
 	@echo "Running Docker container..."
-	docker run -p 8080:8080 --name $(APP_NAME) $(DOCKER_IMAGE):$(DOCKER_TAG)
+	# running in detach mode
+	docker run -d -p 8080:8080 --name $(APP_NAME) $(DOCKER_IMAGE):$(DOCKER_TAG)
 
 # Clean build artifacts
 clean:
@@ -61,6 +61,7 @@ test:
 # Apply Kubernetes configurations
 k8s-deploy:
 	@echo "Applying Kubernetes configurations..."
+	kubectl apply -f kubernetes/namespace.yaml
 	kubectl apply -f kubernetes/
 
 # Help message

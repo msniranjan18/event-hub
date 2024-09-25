@@ -1,7 +1,7 @@
-POST http://localhost:8080/users/signup
+POST http://192.168.5.15:30000/users/signup
 Content-Type: "application/json"
 
 {
-    "email": "m0@a.com",
+    "email": "m1@a.com",
     "pwd": "test"
 }
