@@ -2,9 +2,9 @@
 FROM golang:1.22-bullseye AS builder
 
 # Build-time argument (can be passed during build with --build-arg)
-ARG APP_NAME=event-hub-backend
+ARG APP_NAME=eventhub-backend
 ARG APP_ENV=staging
-ARG BUILD_VERSION=1.0.0
+ARG BUILD_VERSION=2.0.0
 ARG CGO_ENABLED=1
 ARG GOOS=linux
 ARG GOARCH=amd64
@@ -42,11 +42,15 @@ ENV PORT=${PORT}
 WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
-COPY --from=builder /app/${APP_NAME} /bin/${APP_NAME}
+#COPY --from=builder /app/${APP_NAME} /bin/${APP_NAME}
+COPY --from=builder /app/eventhub-backend /bin/eventhub-backend
+
+# make it executable
+RUN chmod +x /bin/eventhub-backend
 
 # Expose port 8080 to the outside world
 EXPOSE ${PORT}
 
 # Command to run the executable
-CMD ["./bin/${APP_NAME}"]
-
+CMD ["/bin/eventhub-backend"]
+#CMD ./bin/${APP_NAME}
