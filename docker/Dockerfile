@@ -3,12 +3,9 @@ FROM golang:1.22-bullseye AS builder
 
 # Build-time argument (can be passed during build with --build-arg)
 ARG APP_NAME=eventhub-backend
-ARG APP_ENV=staging
-ARG BUILD_VERSION=2.0.0
 ARG CGO_ENABLED=1
 ARG GOOS=linux
 ARG GOARCH=amd64
-ARG PORT=8080
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y build-essential
@@ -32,6 +29,12 @@ RUN CGO_ENABLED=${CGO_ENABLED} GOOS=${GOOS} GOARCH=${GOARCH} go build -o ${APP_N
 # Final stage
 FROM debian:bullseye-slim
 
+# Build-time argument (can be passed during build with --build-arg)
+ARG APP_NAME=eventhub-backend
+ARG APP_ENV=staging
+ARG BUILD_VERSION=2.0.0
+ARG PORT=8080
+
 # Set runtime environment variables
 ENV APP_NAME=${APP_NAME}
 ENV APP_ENV=${APP_ENV}
@@ -42,15 +45,14 @@ ENV PORT=${PORT}
 WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
-#COPY --from=builder /app/${APP_NAME} /bin/${APP_NAME}
-COPY --from=builder /app/eventhub-backend /bin/eventhub-backend
+COPY --from=builder /app/${APP_NAME} /bin/${APP_NAME}
+#COPY --from=builder /app/eventhub-backend /bin/eventhub-backend
 
 # make it executable
-RUN chmod +x /bin/eventhub-backend
+RUN chmod +x /bin/${APP_NAME}
 
 # Expose port 8080 to the outside world
 EXPOSE ${PORT}
 
 # Command to run the executable
-CMD ["/bin/eventhub-backend"]
-#CMD ./bin/${APP_NAME}
+CMD ["/bin/${APP_NAME}"]

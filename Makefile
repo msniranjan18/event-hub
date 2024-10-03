@@ -4,6 +4,7 @@ IMAGE_TAG := 2.0.0
 BUILD_DIR := ${PWD}/build
 CONTAINER_NAME := eventhub-backend-container
 APP_NAME := eventhub-backend
+PORT := 8080
 
 # Default target
 all: build
@@ -24,10 +25,10 @@ docker-build:
 	--build-arg GOOS=linux \
 	--build-arg GOARCH=amd64 \
 	--build-arg CGO_ENABLED=1 \
-	--build-arg APP_ENV=staging \
-	--build-arg PORT=8080 \
-	--build-arg APP_NAME=eventhub-backend \
-	--build-arg BUILD_VERSION=2.0.0 \
+	--build-arg APP_ENV=$(APP_ENV) \
+	--build-arg PORT=$(PORT) \
+	--build-arg APP_NAME=$(APP_NAME) \
+	--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 	-f docker/Dockerfile .
 
 # Build Docker image for linux/amr64 architecture
@@ -37,24 +38,29 @@ docker-build-aarch64:
 	--build-arg GOOS=linux \
 	--build-arg GOARCH=arm64 \
 	--build-arg CGO_ENABLED=1 \
-	--build-arg APP_ENV=staging \
-	--build-arg PORT=8080 \
-	--build-arg APP_NAME=eventhub-backend \
-	--build-arg BUILD_VERSION=2.0.0 \
+	--build-arg APP_ENV=$(APP_ENV) \
+	--build-arg PORT=$(PORT) \
+	--build-arg APP_NAME=$(APP_NAME) \
+	--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 	-f docker/Dockerfile .
 
-# Build Docker image for linux/amr64 architecture
+# Build Docker image for linux/amr64 architecture; using buildx driver as docker default driver doesnot support multiplateform- currently not working
+# step-1: Create and use the buildx instance:
+# 	docker buildx create --name mybuilder --use
+# step-2: Check the instance and initialize it:
+# 	docker buildx inspect --bootstrap
+# step-3: run make command
+# sudo make docker-build-multiplatform
 docker-build-multiplatform:
 	@echo "Building Docker image..."
-	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) \
-	--platform linux/amd64, linux/arm64 \
+	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE_NAME):$(IMAGE_TAG) \
 	--build-arg GOOS=linux \
 	--build-arg GOARCH=arm64 \
 	--build-arg CGO_ENABLED=1 \
-	--build-arg APP_ENV=staging \
-	--build-arg PORT=8080 \
-	--build-arg APP_NAME=eventhub-backend \
-	--build-arg BUILD_VERSION=2.0.0 \
+	--build-arg APP_ENV=$(APP_ENV) \
+	--build-arg PORT=$(PORT) \
+	--build-arg APP_NAME=$(APP_NAME) \
+	--build-arg BUILD_VERSION=$(BUILD_VERSION) \
 	-f docker/Dockerfile .
 
 
