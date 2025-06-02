@@ -1,0 +1,6 @@
+PUT http://localhost:8080/users/m2@a.com
+Content-Type: "application/json"
+
+{
+    "pwd": "test-updated-2"
+}
