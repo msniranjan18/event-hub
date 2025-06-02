@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eventhub-backend-config
+  namespace: eventhub
+data:
+  SERVICE_PORT: "8080"
